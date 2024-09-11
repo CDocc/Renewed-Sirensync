@@ -1,5 +1,7 @@
 local Config = require 'Config'
 
+RequestScriptAudioBank('DLC_WMSIRENS\\SIRENPACK_ONE', false)
+
 -- soundId Tables --
 local sirenVehicles = {}
 local hornVehicles = {}
@@ -179,9 +181,9 @@ stateBagWrapper('horn', function(veh, value)
     local soundId = GetSoundId()
 
     hornVehicles[veh] = soundId
-    local soundName = Config.addonHorns[GetEntityModel(veh)] or 'SIRENS_AIRHORN'
+    local soundName = Config.addonHorns[GetEntityModel(veh)] or 'SIREN_ALPHA'
 
-    PlaySoundFromEntity(soundId, soundName, veh, 0, false, 0)
+    PlaySoundFromEntity(soundId, soundName, veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
 end)
 
 local policeHorn = lib.addKeybind({
@@ -237,11 +239,13 @@ stateBagWrapper('sirenMode', function(veh, soundMode)
     sirenVehicles[veh] = soundId
 
     if soundMode == 1 then
-        PlaySoundFromEntity(soundId, 'VEHICLES_HORNS_SIREN_1', veh, 0, false, 0)
+        PlaySoundFromEntity(soundId, 'SIREN_BRAVO', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
     elseif soundMode == 2 then
-        PlaySoundFromEntity(soundId, 'VEHICLES_HORNS_SIREN_2', veh, 0, false, 0)
+        PlaySoundFromEntity(soundId, 'SIREN_CHARLIE', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
     elseif soundMode == 3 then
-        PlaySoundFromEntity(soundId, 'VEHICLES_HORNS_POLICE_WARNING', veh, 0, false, 0)
+        PlaySoundFromEntity(soundId, 'SIREN_DELTA', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
+    elseif soundMode == 4 then
+        PlaySoundFromEntity(soundId, 'siren_hotel', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
     end
 end)
 
@@ -290,7 +294,7 @@ lib.addKeybind({
 
             Rpressed = true
         elseif state.sirenMode > 0 and state.lightsOn and not Rpressed then
-            local newSiren = state.sirenMode + 1 > 3 and 1 or state.sirenMode + 1
+            local newSiren = state.sirenMode + 1 > 4 and 1 or state.sirenMode + 1
 
             state:set('sirenMode', newSiren, true)
         end
