@@ -1,6 +1,14 @@
 local Config = require 'Config'
 
-RequestScriptAudioBank('DLC_WMSIRENS\\SIRENPACK_ONE', false)
+if Config.sirens == 'wm' then
+    RequestScriptAudioBank('DLC_WMSIRENS\\SIRENPACK_ONE', false)
+elseif Config.sirens == 'lg' then
+    RequestScriptAudioBank('DLC_LGMODS\\sirenpack_one', false)
+    RequestScriptAudioBank('DLC_LGMODS\\sirenpack_two', false)
+    RequestScriptAudioBank('DLC_LGMODS\\sirenpack_three', false)
+elseif Config.sirens == 'custom' then
+    -- Add your custom siren audio banks here
+end
 
 -- soundId Tables --
 local sirenVehicles = {}
@@ -183,7 +191,13 @@ stateBagWrapper('horn', function(veh, value)
     hornVehicles[veh] = soundId
     local soundName = Config.addonHorns[GetEntityModel(veh)] or 'SIREN_ALPHA'
 
-    PlaySoundFromEntity(soundId, soundName, veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
+    if Config.sirens == 'wm' then
+        PlaySoundFromEntity(soundId, soundName, veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
+    elseif Config.sirens == 'lg' then
+        PlaySoundFromEntity(soundId, soundName, veh, "SIRENS_AIRHORN", false, 0)
+    elseif Config.sirens == 'custom' then
+        -- Add your custom horn soundset here
+    end
 end)
 
 local policeHorn = lib.addKeybind({
@@ -238,14 +252,27 @@ stateBagWrapper('sirenMode', function(veh, soundMode)
     local soundId = GetSoundId()
     sirenVehicles[veh] = soundId
 
-    if soundMode == 1 then
-        PlaySoundFromEntity(soundId, 'SIREN_BRAVO', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
-    elseif soundMode == 2 then
-        PlaySoundFromEntity(soundId, 'SIREN_CHARLIE', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
-    elseif soundMode == 3 then
-        PlaySoundFromEntity(soundId, 'SIREN_DELTA', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
-    elseif soundMode == 4 then
-        PlaySoundFromEntity(soundId, 'siren_hotel', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
+    if Config.sirens == 'wm' then
+
+        if soundMode == 1 then
+            PlaySoundFromEntity(soundId, 'SIREN_BRAVO', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
+        elseif soundMode == 2 then
+            PlaySoundFromEntity(soundId, 'SIREN_CHARLIE', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
+        elseif soundMode == 3 then
+            PlaySoundFromEntity(soundId, 'SIREN_DELTA', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
+        elseif soundMode == 4 then
+            PlaySoundFromEntity(soundId, 'siren_hotel', veh, "DLC_WMSIRENS_SOUNDSET", false, 0)
+        end
+    elseif Config.sirens == 'lg' then
+        if soundMode == 1 then
+            PlaySoundFromEntity(soundId, 'SIREN_ALPHA', veh, "SIRENPACK_ONE_SOUNDSET", false, 0)
+        elseif soundMode == 2 then
+            PlaySoundFromEntity(soundId, 'SIREN_BRAVO', veh, "SIRENPACK_ONE_SOUNDSET", false, 0)
+        elseif soundMode == 3 then
+            PlaySoundFromEntity(soundId, 'SIREN_CHARLIE', veh, "SIRENPACK_ONE_SOUNDSET", false, 0)
+        end
+    elseif Config.sirens == 'custom' then
+        -- Add your custom siren soundset here
     end
 end)
 
